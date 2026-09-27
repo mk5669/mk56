@@ -3,6 +3,8 @@ on:
   push:
     branches: [greedycat-v2]
   workflow_dispatch:
+  pull_request:
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
