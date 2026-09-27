@@ -50,7 +50,8 @@ class CaptureService:Service(){
    val p=image.planes[0];val rowPixels=p.rowStride/p.pixelStride
    bitmap=Bitmap.createBitmap(rowPixels,image.height,Bitmap.Config.ARGB_8888);p.buffer.rewind();bitmap.copyPixelsFromBuffer(p.buffer)
    cropped=if(rowPixels!=image.width)Bitmap.createBitmap(bitmap,0,0,image.width,image.height)else bitmap
-   recognizer.process(InputImage.fromBitmap(cropped,0)).addOnSuccessListener{result->
+   val frame = cropped ?: throw IllegalStateException("frame unavailable")
+   recognizer.process(InputImage.fromBitmap(frame,0)).addOnSuccessListener{result->
     val candidates=mutableListOf<Double>()
     result.textBlocks.forEach{b->val m=pattern.matcher(b.text.replace(',','.'));while(m.find())m.group(1)?.toDoubleOrNull()?.let{if(it in 1.0..10000.0)candidates.add(it)}}
     val chosen=candidates.firstOrNull()
